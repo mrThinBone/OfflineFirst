@@ -9,4 +9,5 @@
     <string name="settings_new_post_retry_count">New Post Retry Count</string>
     <string name="cannot_refresh_feed">Could Not Refresh Feed</string>
     <string name="settings_api_url">Api Url</string>
+    <string name="type_your_message">Type your message</string>
 </resources>
