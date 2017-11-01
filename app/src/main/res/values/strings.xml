@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">OfflineApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="cannot_sync_post">Could not upload post %s</string>
+    <string name="save">save</string>
+    <string name="settings_user_id">User Id</string>
+    <string name="user_feed_title">Feed of %s</string>
+    <string name="feed_title">Feed</string>
+    <string name="settings_new_post_retry_count">New Post Retry Count</string>
+    <string name="cannot_refresh_feed">Could Not Refresh Feed</string>
+    <string name="settings_api_url">Api Url</string>
 </resources>
