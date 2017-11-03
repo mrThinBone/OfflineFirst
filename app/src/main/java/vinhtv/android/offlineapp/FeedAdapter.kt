@@ -20,7 +20,7 @@ class FeedAdapter: RecyclerView.Adapter<FeedAdapter.FeedItemViewHolder>() {
     private val uniqueMapping = HashMap<String, FeedItem>()
     private val list = createSortedList()
 
-    private fun createKeyFor(post: Post) = post.compositeUniqueKey()
+    private fun createKeyFor(post: Post) = post.id
 
     fun insert(item: FeedItem) {
         val key = createKeyFor(item.post)

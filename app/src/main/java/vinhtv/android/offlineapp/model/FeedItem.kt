@@ -6,4 +6,4 @@ import vinhtv.android.offlineapp.model.db.User
 /**
  * Created by Admin on 11/1/2017.
  */
-class FeedItem(val user: User, val post: Post)
+data class FeedItem(val user: User, val post: Post)
