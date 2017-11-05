@@ -20,4 +20,7 @@ import vinhtv.android.offlineapp.model.db.Post
 
     @Query("select * from post where id = :id")
     fun get(id: String): Post?
+
+    @Delete
+    fun delete(post: Post)
 }

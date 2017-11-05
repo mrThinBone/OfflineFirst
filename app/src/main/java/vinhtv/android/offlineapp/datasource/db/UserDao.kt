@@ -17,4 +17,6 @@ import vinhtv.android.offlineapp.model.db.User
     @Query("select * from user where id = :id")
     fun get(id: Long): User?
 
+    @Query("select * from user")
+    fun getAll(): List<User>
 }

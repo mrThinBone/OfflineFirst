@@ -19,5 +19,5 @@ interface ApiService {
 
     @POST("/new_post.json")
     fun sendPost(@Query("text") text: String, @Query("client_id") clientId: String,
-                 @Query("user_id") userId: Long)
+                 @Query("user_id") userId: Long): Call<NewPostResponse>
 }
