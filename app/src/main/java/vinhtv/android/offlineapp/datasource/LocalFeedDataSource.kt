@@ -1,6 +1,5 @@
 package vinhtv.android.offlineapp.datasource
 
-import vinhtv.android.offlineapp.App
 import vinhtv.android.offlineapp.datasource.db.AppDatabase
 import vinhtv.android.offlineapp.model.FeedItem
 import vinhtv.android.offlineapp.model.db.Post
@@ -12,7 +11,7 @@ import vinhtv.android.offlineapp.util.DataUtils
  */
 class LocalFeedDataSource {
 
-    private val db: AppDatabase = App.database()!!
+    private val db: AppDatabase = AppDatabase.getInstance(null)!!
 
     fun add(post: Post) {
         // user always already exist
@@ -24,10 +23,10 @@ class LocalFeedDataSource {
         val userDao = db.userDao()
         val postDao = db.postDao()
         val usersMap = DataUtils.userListAsMap(userDao.getAll())
-        val posts = postDao.getAll()
+        val posts = DataUtils.postsFromCursor(postDao.getAll())
 
         return posts.map {
-            val user = usersMap.getOrDefault(it.userID, User(1, "me"))
+            val user = usersMap[it.userID, User(1, "me")]
             FeedItem(user, it)
         }
     }

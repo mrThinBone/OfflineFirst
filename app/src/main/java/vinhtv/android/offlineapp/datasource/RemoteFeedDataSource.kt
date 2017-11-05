@@ -3,10 +3,7 @@ package vinhtv.android.offlineapp.datasource
 import com.birbit.android.jobqueue.JobManager
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import vinhtv.android.offlineapp.App
 import vinhtv.android.offlineapp.datasource.api.ApiService
-import vinhtv.android.offlineapp.datasource.api.IPost
-import vinhtv.android.offlineapp.datasource.api.IUser
 import vinhtv.android.offlineapp.model.db.Post
 import vinhtv.android.offlineapp.model.db.User
 import vinhtv.android.offlineapp.sync.SaveNewFeedJob
@@ -27,8 +24,7 @@ class RemoteFeedDataSource(private val jobManager: JobManager) {
     }
 
     fun add(post: Post) {
-        jobManager.addJob(SaveNewFeedJob(post = post, localDB = App.database()!!,
-                apiService = apiService))
+        jobManager.addJob(SaveNewFeedJob(post = post, apiService = apiService))
     }
 
     fun fetch(since: Long): Pair<List<User>, List<Post>> {

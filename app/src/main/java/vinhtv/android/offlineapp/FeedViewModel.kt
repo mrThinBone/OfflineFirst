@@ -1,13 +1,14 @@
 package vinhtv.android.offlineapp
 
-import android.arch.lifecycle.ViewModel
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import vinhtv.android.offlineapp.model.db.Post
 import vinhtv.android.offlineapp.model.db.User
 
 /**
  * Created by Admin on 11/1/2017.
  */
-class FeedViewModel: ViewModel() {
+class FeedViewModel(context: Application): AndroidViewModel(context) {
 
     val user = User(1, "vinhtv")
 

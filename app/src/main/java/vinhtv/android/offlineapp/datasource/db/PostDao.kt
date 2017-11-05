@@ -1,6 +1,7 @@
 package vinhtv.android.offlineapp.datasource.db
 
 import android.arch.persistence.room.*
+import android.database.Cursor
 import vinhtv.android.offlineapp.model.db.Post
 
 /**
@@ -12,15 +13,18 @@ import vinhtv.android.offlineapp.model.db.Post
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(post: Post)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun bulkInsert(posts: List<Post>)
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(post: Post)
+    fun update(post: Post): Int
 
     @Query("select * from post")
-    fun getAll(): List<Post>
+    fun getAll(): Cursor
 
     @Query("select * from post where id = :id")
-    fun get(id: String): Post?
+    fun get(id: String): Cursor
 
-    @Delete
-    fun delete(post: Post)
+    @Query("delete from post where id = :id")
+    fun delete(id: String)
 }
