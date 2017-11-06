@@ -28,14 +28,16 @@ class DataUtils {
         fun postsFromCursor(cursor: Cursor, autoClose: Boolean = true): List<Post> {
             val posts = ArrayList<Post>()
             while (cursor.moveToNext()) {
-                posts.add(singlePostFromCursor(cursor, false))
+                posts.add(singlePostFromCursor(cursor))
             }
             if(autoClose) cursor.close()
             return posts
         }
 
-        fun singlePostFromCursor(cursor: Cursor, autoClose: Boolean): Post {
-            if(autoClose) cursor.moveToFirst()
+        fun singlePostFromCursor(cursor: Cursor, autoClose: Boolean = false): Post {
+            if(autoClose) {
+                if(!cursor.moveToFirst()) return Post.dumpPost()
+            }
             val post = Post(
                     id = cursor.getString(cursor.getColumnIndex(Post.COL_ID)),
                     text = cursor.getString(cursor.getColumnIndex(Post.COL_TEXT)),

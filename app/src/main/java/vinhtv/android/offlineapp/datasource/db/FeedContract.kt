@@ -8,5 +8,5 @@ import android.net.Uri
 object FeedContract {
     val AUTHORITY = "vinhtv.android.offlineapp.provider"
     /** The URI for the Post table. */
-    val URI_POST = Uri.parse("content://$AUTHORITY/post")
+    val URI_POST = Uri.parse("content://$AUTHORITY/post")!!
 }
