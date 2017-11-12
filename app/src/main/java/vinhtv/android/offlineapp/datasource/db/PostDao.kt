@@ -12,10 +12,10 @@ import vinhtv.android.offlineapp.model.db.Post
 @Dao interface PostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(post: Post)
+    fun insert(post: Post): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsert(posts: List<Post>)
+    fun insert(posts: List<Post>): Array<Long>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(post: Post): Int
