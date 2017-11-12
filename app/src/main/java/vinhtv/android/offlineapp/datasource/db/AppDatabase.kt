@@ -15,10 +15,10 @@ abstract class AppDatabase: RoomDatabase() {
     companion object {
         private var mInstance: AppDatabase? = null
 
-        fun getInstance(context: Context?): AppDatabase? {
+        fun getInstance(context: Context?): AppDatabase {
             if (mInstance == null)
                 mInstance = Room.databaseBuilder(context!!, AppDatabase::class.java, "feed.db").build()
-            return mInstance
+            return mInstance!!
         }
     }
     abstract fun postDao(): PostDao

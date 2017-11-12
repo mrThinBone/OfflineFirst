@@ -11,6 +11,7 @@ class App: Application() {
 
     companion object {
         private var jobManager: JobManager? = null
+        fun jobManager() = jobManager!!
     }
 
     override fun onCreate() {

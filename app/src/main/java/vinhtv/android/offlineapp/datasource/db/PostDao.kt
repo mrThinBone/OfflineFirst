@@ -1,5 +1,6 @@
 package vinhtv.android.offlineapp.datasource.db
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.database.Cursor
 import vinhtv.android.offlineapp.model.db.Post
@@ -24,6 +25,12 @@ import vinhtv.android.offlineapp.model.db.Post
 
     @Query("select * from post where id = :id")
     fun get(id: String): Cursor
+
+    @Query("select * from post where createdAt >= :since")
+    fun getByTime(since: Long): LiveData<List<Post>>
+
+    @Query("select * from post where id = :id")
+    fun getById(id: String): Post
 
     @Query("delete from post where id = :id")
     fun delete(id: String)

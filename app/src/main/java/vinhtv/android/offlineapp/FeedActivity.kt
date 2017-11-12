@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.EditText
 import android.widget.Toast
-import vinhtv.android.offlineapp.model.FeedItem
 
 class FeedActivity : AppCompatActivity() {
 
@@ -47,7 +46,7 @@ class FeedActivity : AppCompatActivity() {
             Toast.makeText(this, "empty content will not be sent", Toast.LENGTH_SHORT).show()
             return
         }
-        feedAdapter.insert(FeedItem(viewModel!!.user, viewModel!!.createPost(message)))
+//        feedAdapter.insert(FeedItem(viewModel!!.user, viewModel!!.createPost(message)))
     }
 
     private fun fetchFeedAsync() {}

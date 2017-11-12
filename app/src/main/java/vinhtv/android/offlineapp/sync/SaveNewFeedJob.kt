@@ -3,7 +3,7 @@ package vinhtv.android.offlineapp.sync
 import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
 import vinhtv.android.offlineapp.datasource.api.ApiService
-import vinhtv.android.offlineapp.datasource.db.FeedContract
+import vinhtv.android.offlineapp.datasource.db.AppDatabase
 import vinhtv.android.offlineapp.model.db.Post
 import vinhtv.android.offlineapp.util.DataUtils.Companion.timeInMillis
 import java.util.concurrent.TimeUnit
@@ -22,9 +22,12 @@ class SaveNewFeedJob(params: Params = Params(10).requireNetwork().groupBy("new_p
             val responseBody = response.body()
             if(responseBody != null) {
                 post.created = timeInMillis(responseBody.post.created_at)
-                val uri = FeedContract.URI_POST.buildUpon().appendPath(post.id).build()
+                /** GET RID OF CONTENT_PROVIDER THANKS TO LIVE_DATA AND ROOM */
+                /* val uri = FeedContract.URI_POST.buildUpon().appendPath(post.id).build()
                 // always update because this POST has been inserted to db before update here
-                applicationContext.contentResolver.update(uri, post.toContentValues(), null, null)
+                applicationContext.contentResolver.update(uri, post.toContentValues(), null, null)*/
+                val postDao = AppDatabase.getInstance(applicationContext).postDao()
+                postDao.update(post)
             }
         } else {
             throw NetworkException(response.code())
@@ -43,8 +46,11 @@ class SaveNewFeedJob(params: Params = Params(10).requireNetwork().groupBy("new_p
     override fun onAdded() {}
 
     override fun onCancel(cancelReason: Int, throwable: Throwable?) {
-        val uri = FeedContract.URI_POST.buildUpon().appendPath(post.id).build()
-        applicationContext.contentResolver.delete(uri, null, null)
+        /** GET RID OF CONTENT_PROVIDER THANKS TO LIVE_DATA AND ROOM */
+        /* val uri = FeedContract.URI_POST.buildUpon().appendPath(post.id).build()
+        applicationContext.contentResolver.delete(uri, null, null)*/
+        val postDao = AppDatabase.getInstance(applicationContext).postDao()
+        postDao.delete(post.id)
     }
 
 }

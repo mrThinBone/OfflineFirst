@@ -2,19 +2,52 @@ package vinhtv.android.offlineapp
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
+import vinhtv.android.offlineapp.datasource.LocalFeedDataSource
+import vinhtv.android.offlineapp.datasource.RemoteFeedDataSource
+import vinhtv.android.offlineapp.model.FeedItem
 import vinhtv.android.offlineapp.model.db.Post
 import vinhtv.android.offlineapp.model.db.User
+import vinhtv.android.offlineapp.repository.FeedRepository
 
 /**
  * Created by Admin on 11/1/2017.
  */
 class FeedViewModel(context: Application): AndroidViewModel(context) {
 
-    val user = User(1, "vinhtv")
+    private val user = User(1, "vinhtv")
+    private val feedRepository = FeedRepository(local = LocalFeedDataSource(context),
+            remote = RemoteFeedDataSource(App.jobManager()))
+    private var livePost: LiveData<List<Post>>? = null
+    val feedObservable = MutableLiveData<List<FeedItem>>()
 
-    fun createPost(message: String): Post {
-        return Post(Post.compositeUniqueKey(user.id), message, created = System.currentTimeMillis()
+    fun createFeed(message: String) {
+        val post = Post(Post.compositeUniqueKey(user.id), message, created = System.currentTimeMillis()
                 , pending = true, userID = user.id)
+        feedRepository.addPost(post)
     }
 
+    fun fetchFeeds() {
+        feedRepository.fetchPosts(0)
+    }
+
+    fun observeData() {
+        if(livePost == null) {
+            livePost = feedRepository.livePost(0)
+            livePost?.observeForever(livePostObserver)
+        }
+    }
+
+    override fun onCleared() {
+        livePost?.removeObserver(livePostObserver)
+        super.onCleared()
+    }
+
+    private val livePostObserver = Observer<List<Post>> {
+        if(it!= null && it.isNotEmpty()) {
+            feedObservable.postValue(feedRepository.getFeeds(it))
+        }
+    }
 }
