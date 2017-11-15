@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import kotlinx.coroutines.experimental.launch
 import vinhtv.android.offlineapp.datasource.LocalFeedDataSource
 import vinhtv.android.offlineapp.datasource.RemoteFeedDataSource
 import vinhtv.android.offlineapp.model.FeedItem
@@ -22,15 +23,22 @@ class FeedViewModel(context: Application): AndroidViewModel(context) {
             remote = RemoteFeedDataSource(App.jobManager()))
     private var livePost: LiveData<List<Post>>? = null
     val feedObservable = MutableLiveData<List<FeedItem>>()
+    val uiEventObservable = MutableLiveData<UIFeedEvent>()
 
-    fun createFeed(message: String) {
-        val post = Post(Post.compositeUniqueKey(user.id), message, created = System.currentTimeMillis()
-                , pending = true, userID = user.id)
-        feedRepository.addPost(post)
+    fun addFeed(message: String) {
+        launch(ThreadPool.commonIO) {
+            val post = Post(Post.compositeUniqueKey(user.id), message, created = System.currentTimeMillis()
+                    , pending = true, userID = user.id)
+            feedRepository.addPost(post)
+        }
     }
 
     fun fetchFeeds() {
-        feedRepository.fetchPosts(0)
+        uiEventObservable.postValue(UIFeedEvent.NONE)
+        launch(ThreadPool.commonIO) {
+            feedRepository.fetchPosts(0)
+            uiEventObservable.postValue(UIFeedEvent.REFRESHED)
+        }
     }
 
     fun observeData() {
@@ -47,7 +55,9 @@ class FeedViewModel(context: Application): AndroidViewModel(context) {
 
     private val livePostObserver = Observer<List<Post>> {
         if(it!= null && it.isNotEmpty()) {
-            feedObservable.postValue(feedRepository.getFeeds(it))
+            launch (ThreadPool.diskIO) {
+                feedObservable.postValue(feedRepository.getFeeds(it))
+            }
         }
     }
 }

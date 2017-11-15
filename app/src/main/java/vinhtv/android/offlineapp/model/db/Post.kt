@@ -6,6 +6,7 @@ import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 import android.content.ContentValues
 import vinhtv.android.offlineapp.model.db.Post.Companion.TABLE_NAME
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -18,7 +19,7 @@ class Post(@PrimaryKey @ColumnInfo(name = COL_ID) var id: String,
            @ColumnInfo(name = COL_TEXT) var text: String,
            @ColumnInfo(name = COL_CREATED_AT) var created: Long,
            @ColumnInfo(name = COL_PENDING) var pending: Boolean,
-           @ColumnInfo(name = COL_USER_ID) var userID: Long) {
+           @ColumnInfo(name = COL_USER_ID) var userID: Long): Serializable {
 
     fun same(other: Post?): Boolean {
         if(other == null) return false

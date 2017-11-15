@@ -21,7 +21,7 @@ class DataUtils {
         }
 
         fun timeInMillis(dateString: String): Long {
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
             return dateFormat.parse(dateString).time
         }
 

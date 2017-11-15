@@ -21,7 +21,12 @@ class FeedRepository(private val local: LocalFeedDataSource,
     fun getFeeds(posts: List<Post>): List<FeedItem> = local.load(posts)
 
     fun fetchPosts(since: Long) {
-        val fetchResult = remote.fetch(since)
-        local.update(fetchResult.first, fetchResult.second)
+        try {
+            val fetchResult = remote.fetch(since)
+            local.update(fetchResult.first, fetchResult.second)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // TODO notify to UI
+        }
     }
 }

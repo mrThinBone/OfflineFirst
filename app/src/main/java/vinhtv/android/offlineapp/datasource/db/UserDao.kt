@@ -15,7 +15,7 @@ import vinhtv.android.offlineapp.model.db.User
     fun insert(user: User)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsert(user: List<User>)
+    fun insert(user: List<User>)
 
     @Query("select * from user where id = :id")
     fun get(id: Long): User?

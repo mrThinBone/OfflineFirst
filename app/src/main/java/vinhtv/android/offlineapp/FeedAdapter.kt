@@ -24,10 +24,10 @@ class FeedAdapter: RecyclerView.Adapter<FeedAdapter.FeedItemViewHolder>() {
 
     fun insert(item: FeedItem) {
         val key = createKeyFor(item.post)
-        val existing = uniqueMapping.put(key, item)
+        val existing = uniqueMapping[key]
         if(existing == null) list.add(item)
         else {
-            val pos = list.indexOf(item)
+            val pos = list.indexOf(existing)
             list.updateItemAt(pos, item)
         }
     }
@@ -53,13 +53,15 @@ class FeedAdapter: RecyclerView.Adapter<FeedAdapter.FeedItemViewHolder>() {
         val newListKeys = HashSet<String>()
         items.forEach { newListKeys.add(createKeyFor(it.post)) }
 
-        // remove redundant items
-        for(i in list.size()-1..0) {
-            val item = list[i]
-            val key = createKeyFor(item.post)
-            if(!newListKeys.contains(key)) {
-                uniqueMapping.remove(key)
-                list.removeItemAt(i)
+        if(list.size() > 0) {
+            // remove redundant items
+            for (i in list.size() - 1..0) {
+                val item = list[i]
+                val key = createKeyFor(item.post)
+                if (!newListKeys.contains(key)) {
+                    uniqueMapping.remove(key)
+                    list.removeItemAt(i)
+                }
             }
         }
         insert(items)

@@ -36,7 +36,7 @@ class FeedObserver(handler: Handler, contentResolver: ContentResolver): ContentO
                 val posts = DataUtils.postsFromCursor(postDao.getAll())
 
                 val feeds = posts.map {
-                    val user = usersMap[it.userID, User(1, "me")]
+                    val user = usersMap[it.userID, User(1, "vinhtv")]
                     FeedItem(user, it)
                 }
                 observable.postValue(FeedEvent(FeedEvent.EVENT.REFRESHED, feeds))

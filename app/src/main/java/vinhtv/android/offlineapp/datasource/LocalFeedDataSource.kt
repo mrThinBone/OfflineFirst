@@ -29,7 +29,7 @@ class LocalFeedDataSource(context: Context) {
         val posts = DataUtils.postsFromCursor(postDao.getAll())
 
         return posts.map {
-            val user = usersMap[it.userID, User(1, "me")]
+            val user = usersMap[it.userID, User(1, "vinhtv")]
             FeedItem(user, it)
         }
     }
@@ -39,8 +39,8 @@ class LocalFeedDataSource(context: Context) {
     fun update(users: List<User>, posts: List<Post>) {
         val userDao = db.userDao()
         val postDao = db.postDao()
-        userDao.bulkInsert(users)
-        postDao.bulkInsert(posts)
+        userDao.insert(users)
+        postDao.insert(posts)
     }
 
     fun load(posts: List<Post>): List<FeedItem> {
@@ -48,7 +48,7 @@ class LocalFeedDataSource(context: Context) {
         val usersMap = DataUtils.userListAsMap(userDao.getAll())
 
         return posts.map {
-            val user = usersMap[it.userID, User(1, "me")]
+            val user = usersMap[it.userID, User(1, "vinhtv")]
             FeedItem(user, it)
         }
     }

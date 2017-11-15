@@ -1,9 +1,6 @@
 package vinhtv.android.offlineapp.datasource
 
 import com.birbit.android.jobqueue.JobManager
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import vinhtv.android.offlineapp.datasource.api.ApiService
 import vinhtv.android.offlineapp.model.db.Post
 import vinhtv.android.offlineapp.model.db.User
 import vinhtv.android.offlineapp.sync.SaveNewFeedJob
@@ -16,19 +13,12 @@ import java.io.InvalidObjectException
  */
 class RemoteFeedDataSource(private val jobManager: JobManager) {
 
-    companion object {
-        val apiService = Retrofit.Builder()
-                .baseUrl("https://architecture-demo-vinhtv.c9users.io")
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build().create(ApiService::class.java)!!
-    }
-
     fun add(post: Post) {
-        jobManager.addJob(SaveNewFeedJob(post = post, apiService = apiService))
+        jobManager.addJob(SaveNewFeedJob(post = post))
     }
 
     fun fetch(since: Long): Pair<List<User>, List<Post>> {
-        val call = apiService.feed(since)
+        val call = ApiFactory.apiService.feed(since)
         try {
             val response = call.execute()
             val responseBody = response.body() ?: throw InvalidObjectException("fetch feed response body not found")
