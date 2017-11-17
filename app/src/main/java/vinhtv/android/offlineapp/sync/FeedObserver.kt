@@ -27,7 +27,7 @@ class FeedObserver(handler: Handler, contentResolver: ContentResolver): ContentO
 
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         val code = FeedContentProvider.MATCHER.match(uri)
-        val db = AppDatabase.getInstance(null)!!
+        val db = AppDatabase.getInstance(null)
         val userDao = db.userDao()
         val postDao = db.postDao()
         when(code) {
@@ -57,10 +57,6 @@ class FeedObserver(handler: Handler, contentResolver: ContentResolver): ContentO
                 observable.postValue(FeedEvent(if(deleteOps) FeedEvent.EVENT.DELETED else FeedEvent.EVENT.UPDATED, data))
             }
         }
-    }
-
-    fun unsubcribe(contentResolver: ContentResolver) {
-        contentResolver.unregisterContentObserver(this)
     }
 
 

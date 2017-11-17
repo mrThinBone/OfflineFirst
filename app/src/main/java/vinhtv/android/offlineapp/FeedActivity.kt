@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.EditText
 import android.widget.Toast
-import vinhtv.android.offlineapp.model.FeedItem
+import vinhtv.android.offlineapp.sync.FeedEvent
 
 class FeedActivity : AppCompatActivity() {
 
@@ -35,9 +35,9 @@ class FeedActivity : AppCompatActivity() {
         initRecyclerView()
 
         viewModel = ViewModelProviders.of(this).get(FeedViewModel::class.java)
-        viewModel!!.observeData()
+        viewModel!!.observeData()?.observe(this, feedObserver)
         viewModel!!.uiEventObservable.observe(this, uiEventObserver)
-        viewModel!!.feedObservable.observe(this, feedObserver)
+        viewModel!!.getLocalFeed()
     }
 
     private fun initRecyclerView() {
@@ -53,22 +53,25 @@ class FeedActivity : AppCompatActivity() {
             Toast.makeText(this, "empty content will not be sent", Toast.LENGTH_SHORT).show()
             return
         }
-        viewModel!!.addFeed(message)
-//        feedAdapter.insert(FeedItem(viewModel!!.user, viewModel!!.createPost(message)))
+        feedAdapter.insert(viewModel!!.addFeed(message))
     }
 
     private fun fetchFeedAsync() {
         viewModel!!.fetchFeeds()
     }
 
-    private val feedObserver = Observer<List<FeedItem>> {
-        feedAdapter.swapList(it!!)
-    }
-
     private val uiEventObserver = Observer<UIFeedEvent> {
         when(it) {
             UIFeedEvent.NONE -> {}
             UIFeedEvent.REFRESHED -> { swipeRefreshLayout!!.isRefreshing = false }
+        }
+    }
+
+    private val feedObserver = Observer<FeedEvent> {
+        when(it?.event) {
+            FeedEvent.EVENT.DELETED -> feedAdapter.remove(it.data[0].post)
+            FeedEvent.EVENT.UPDATED -> feedAdapter.update(it.data[0].post)
+            FeedEvent.EVENT.REFRESHED -> feedAdapter.swapList(it.data)
         }
     }
 }

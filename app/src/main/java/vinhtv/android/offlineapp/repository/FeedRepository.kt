@@ -18,7 +18,7 @@ class FeedRepository(private val local: LocalFeedDataSource,
 
     fun livePost(since: Long) = local.liveLoad(since)
 
-    fun getFeeds(posts: List<Post>): List<FeedItem> = local.load(posts)
+    fun getFeeds(): List<FeedItem> = local.load()
 
     fun fetchPosts(since: Long) {
         try {

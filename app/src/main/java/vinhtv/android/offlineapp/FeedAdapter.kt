@@ -25,11 +25,13 @@ class FeedAdapter: RecyclerView.Adapter<FeedAdapter.FeedItemViewHolder>() {
     fun insert(item: FeedItem) {
         val key = createKeyFor(item.post)
         val existing = uniqueMapping[key]
-        if(existing == null) list.add(item)
-        else {
+        if(existing == null) {
+            list.add(item)
+        } else {
             val pos = list.indexOf(existing)
             list.updateItemAt(pos, item)
         }
+        uniqueMapping.put(key, item)
     }
 
     fun update(post: Post) {

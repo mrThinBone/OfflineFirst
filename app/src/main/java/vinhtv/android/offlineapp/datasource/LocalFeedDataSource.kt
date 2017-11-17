@@ -21,7 +21,6 @@ class LocalFeedDataSource(context: Context) {
         postDao.insert(post)
     }
 
-    /** GET RID OF CONTENT_PROVIDER THANKS TO LIVE_DATA AND ROOM */
     fun load(): List<FeedItem> {
         val userDao = db.userDao()
         val postDao = db.postDao()

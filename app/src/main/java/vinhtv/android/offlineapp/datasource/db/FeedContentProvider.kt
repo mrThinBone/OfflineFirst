@@ -30,7 +30,7 @@ class FeedContentProvider: ContentProvider() {
         when(code) {
             CODE_POST_DIR -> {
                 val post = Post.fromContentValues(values)
-                val count = AppDatabase.getInstance(context)!!.postDao().insert(post)
+                val count = AppDatabase.getInstance(context).postDao().insert(post)
                 if(count > 0) context.contentResolver.notifyChange(uri, null)
                 return uri!!
             }
@@ -43,7 +43,7 @@ class FeedContentProvider: ContentProvider() {
                        selectionArgs: Array<out String>?, sortOrder: String?): Cursor {
         val code = MATCHER.match(uri)
         if(code == CODE_POST_DIR || code == CODE_POST_ITEM) {
-            val postDao = AppDatabase.getInstance(context)!!.postDao()
+            val postDao = AppDatabase.getInstance(context).postDao()
             val id = postIdFromUri(uri!!)
             val cursor = if(code == CODE_POST_ITEM) postDao.get(id) else postDao.getAll()
             cursor.setNotificationUri(context.contentResolver, uri)
@@ -53,9 +53,7 @@ class FeedContentProvider: ContentProvider() {
         }
     }
 
-    override fun onCreate(): Boolean {
-        return true
-    }
+    override fun onCreate(): Boolean = true
 
     override fun update(uri: Uri?, values: ContentValues?, selection: String?,
                         selectionArgs: Array<out String>?): Int {
@@ -67,7 +65,7 @@ class FeedContentProvider: ContentProvider() {
                 val id = postIdFromUri(uri!!)
                 val post = Post.fromContentValues(values)
                 if(id != post.id) throw IllegalArgumentException("uri ID is not same as post ID")
-                AppDatabase.getInstance(context)!!.postDao().update(post)
+                AppDatabase.getInstance(context).postDao().update(post)
                 context.contentResolver.notifyChange(uri, null)
                 return 1
             }
@@ -81,7 +79,7 @@ class FeedContentProvider: ContentProvider() {
             CODE_POST_DIR -> throw IllegalArgumentException("delete whole table is not supported")
             CODE_POST_ITEM -> {
                 val id = postIdFromUri(uri!!)
-                AppDatabase.getInstance(context)!!.postDao().delete(id)
+                AppDatabase.getInstance(context).postDao().delete(id)
                 context.contentResolver.notifyChange(uri, null)
             }
         }
@@ -94,7 +92,7 @@ class FeedContentProvider: ContentProvider() {
         when(code) {
             CODE_POST_DIR -> {
                 val posts = values.map { Post.fromContentValues(it) }
-                val count = AppDatabase.getInstance(context)!!.postDao().insert(posts).count { it>0 }
+                val count = AppDatabase.getInstance(context).postDao().insert(posts).count { it>0 }
                 if(count > 0) context.contentResolver.notifyChange(uri, null)
                 return count
             }
