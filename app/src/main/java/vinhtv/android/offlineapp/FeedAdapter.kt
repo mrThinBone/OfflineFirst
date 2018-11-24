@@ -76,15 +76,15 @@ class FeedAdapter: RecyclerView.Adapter<FeedAdapter.FeedItemViewHolder>() {
 
     override fun getItemCount() = list.size()
 
-    override fun onBindViewHolder(holder: FeedItemViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: FeedItemViewHolder, position: Int) {
         val feedItem = list.get(position)
-        holder?.tvUser?.text = feedItem.user.name
-        holder?.tvMessage?.text = feedItem.post.text
-        holder?.ivSync?.visibility = if(feedItem.post.pending) View.VISIBLE else View.INVISIBLE
+        holder.tvUser.text = feedItem.user.name
+        holder.tvMessage.text = feedItem.post.text
+        holder.ivSync.visibility = if(feedItem.post.pending) View.VISIBLE else View.INVISIBLE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FeedItemViewHolder {
-        val inflater = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return FeedItemViewHolder(inflater.inflate(R.layout.feed_item, parent, false))
     }
 

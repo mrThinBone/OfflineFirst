@@ -5,7 +5,8 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.os.Handler
 import android.os.HandlerThread
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import vinhtv.android.offlineapp.datasource.LocalFeedDataSource
 import vinhtv.android.offlineapp.datasource.RemoteFeedDataSource
 import vinhtv.android.offlineapp.model.FeedItem
@@ -31,21 +32,23 @@ class FeedViewModel(context: Application): AndroidViewModel(context) {
     fun addFeed(message: String): FeedItem {
         val post = Post(Post.compositeUniqueKey(user.id), message, created = System.currentTimeMillis()
                 , pending = true, userID = user.id)
-        launch(ThreadPool.commonIO) {
+
+        GlobalScope.launch(ThreadPool.commonIO) {
             feedRepository.addPost(post)
         }
+
         return FeedItem(user, post)
     }
 
     fun getLocalFeed() {
-        launch(ThreadPool.commonIO) {
+        GlobalScope.launch(ThreadPool.commonIO) {
             feedObserver?.observable()?.postValue(FeedEvent(FeedEvent.EVENT.REFRESHED, feedRepository.getFeeds()))
         }
     }
 
     fun fetchFeeds() {
         uiEventObservable.postValue(UIFeedEvent.NONE)
-        launch(ThreadPool.commonIO) {
+        GlobalScope.launch(ThreadPool.commonIO) {
             feedRepository.fetchPosts(0)
             getLocalFeed()
             uiEventObservable.postValue(UIFeedEvent.REFRESHED)
@@ -62,7 +65,7 @@ class FeedViewModel(context: Application): AndroidViewModel(context) {
     }
 
     override fun onCleared() {
-        contentResolver().unregisterContentObserver(feedObserver)
+        contentResolver().unregisterContentObserver(feedObserver!!)
         super.onCleared()
     }
 

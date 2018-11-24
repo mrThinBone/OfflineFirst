@@ -1,14 +1,14 @@
 package vinhtv.android.offlineapp
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.newSingleThreadContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
+import java.util.concurrent.Executors
 
 /**
  * Created by vinh.trinh on 11/1/2017.
  */
 object ThreadPool {
-    val diskIO = newSingleThreadContext("diskPool")
-    val commonIO = CommonPool
-    val main = UI
+    val diskIO = Executors.newSingleThreadExecutor().asCoroutineDispatcher()//Dispatchers.IO
+    val commonIO = Dispatchers.Default
+    val main = Dispatchers.Main
 }
